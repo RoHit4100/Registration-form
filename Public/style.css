@@ -1,0 +1,17 @@
+@media (min-width: 1025px) {
+    .h-custom {
+       height: 100vh !important;
+    }
+}
+
+body{
+    background-color: rgb(143, 196, 183);
+}
+
+.btn, .btn-lg{
+    --bs-btn-padding-y: 0.3rem;
+}
+
+.main{
+    border-radius: 0.5rem 0.5rem 0px 0px;
+}   
