@@ -12,10 +12,19 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
+app.post("/success", function (req, res) {
+  res.redirect("/");
+});
+app.post("/failure", function (req, res) {
+  res.redirect("/");
+});
+
+
+
 app.post("/", function (req, res) {
   const fName = req.body.Fname;
   const lName = req.body.Lname;
-  const email = req.body.email;
+  const email = req.body.emailId;
 
   const data = {
     members: [
@@ -24,40 +33,36 @@ app.post("/", function (req, res) {
         status: "subscribed",
         merge_fields: {
           FNAME: fName,
-          LNAME: lName,
-        },
-      },
-    ],
+          LNAME: lName
+        }
+      }
+    ]
   };
-  const jsonData = stringify(data);
 
+  const jsonData = JSON.stringify(data);
+  console.log(jsonData);
   const url = "https://us8.api.mailchimp.com/3.0/lists/ee58b0d8b3";
 
   const option = {
     method: "POST",
-    auth: "hackur777:d891263c028e75dfbfc890bdf29c37b1-us8"
+    auth: "rohit4100:010404c78701dbdd9d0839d755d1b699-us8"
   }
 
   const request = https.request(url, option, function (response) {
-    response.on("data", function (data) {  
+    if (response.statusCode == 200) {
+      res.sendFile(__dirname + "/success.html")
+    } else {
+      res.sendFile(__dirname + "/failure.html")
+    }
+    response.on("data", function (data) {
       console.log(JSON.parse(data));
     });
   })
 
-  request.write();
+  request.write(jsonData);
   request.end();
 });
 
 app.listen(3000, function () {
   console.log("This server is running on 3000");
 });
-
-// list id
-// 
-
-// api key
-// 
-
-// api url
-// 
-// "https://$API_SERVER.api.mailchimp.com/3.0/lists/$list_id/members/$subscriber_hash"
